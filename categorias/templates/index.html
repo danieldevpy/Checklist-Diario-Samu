@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block unidade %}
+
+    <div class="headerleft">
+        <img src="{% static 'img/samulogo.png' %}">
+        <h2> Checklist Diário </h2>
+    </div>
+
+    <div class="headeright">
+        {% if user.usa and not user.is_staff%}
+        <label>Logado na unidade de <b>{{user.unity}} (USA)</b></label>
+        {% elif user.usb and not user.is_staff%}
+        <label>Logado na unidade de <b>{{user.unity}} (USB)</b></label>
+        {% else %}
+        <label>Logado na unidade de <b>{{user.unity}}</b></label>
+        {% endif %}
+        <label>Ultimo checklist feito: <b>{{last}}</b></label>
+        <br>
+        {% if user.is_staff %}
+        <label><a href="/registros">Registros Mensal</a></label>
+        <label><a href="/admin" target="_blank">Acesso Administrativo</a></label>
+        {% endif %}
+        <label><a href="{% url 'logout' %}">Sair</a></label>
+    </div>
+
+       
+{%endblock%}
+
+{% block conteudo%}
+            <script >const main = new Main();</script>
+            <div class="container">
+                <form id="form" action="{% url 'finalizar' %}" method="POST" class="container"> {% csrf_token %}
+                {% for categoria in categorias %}
+                <div id="pacote" class="pacote closed" onclick="main.clicked(this);">
+                    <div class="top"> <p>{{ categoria.name }} </p></div>
+                    <div id="{{categoria.name}}" class="display_closed" >
+                        <table>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Carga</th>
+                                <th>Quantidade</th>
+                                </tr>
+                            {% for chargeitem in items %}
+                            {% if chargeitem.item.category == categoria%}
+                            <tr>
+                                <td>{{chargeitem.item.name}}</td>
+                                <td>{{chargeitem.charge}}</td>
+                                <td> <input type="text" class="input" name="{{chargeitem.id}}"></td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                            </table>
+                            <button type="button" class="btn" onclick="main.btn_back();">VOLTAR</button>
+                    </div>
+                </div>
+                {% endfor %}
+                <div id="pacote" class="pacote closed" name="pacote_fim" onclick="main.clicked(this);" >
+                    <div class="top"> <p>Finalizar<br>Checklist</p></div>
+                    <div id="finalizar" class="display_closed" >
+                        <table>
+                                <tr>
+                                    <td>Nome Completo</td>
+                                    <td><input type="text" class="input" name="nomecompleto"></td>
+                                </tr>
+                                <tr>
+                                    <td>Cargo</td>
+                                    <td><input type="text" class="input" name="cargo"></td>
+                                </tr>
+                                <tr>
+                                    <td>Viatura</td>
+                                    <td><select name="select_viaturas">
+                                        {% for vtr in viaturas %}
+                                        <option value="{{vtr.id}}">{{vtr.name}}/{{vtr.placa}}</option>
+                                        {% endfor %}
+                                      </select></td>
+                                </tr>
+                                <tr>
+                                    <td>KM</td>
+                                    <td><input type="text" class="input" name="km"></td>
+                                </tr>
+
+                        </table>
+                        <button type="button" class="btn" onclick="main.check();">FINALIZAR</button>
+                        <button type="button" class="btn" onclick="main.btn_back();">VOLTAR</button>
+                    </div>
+                </div>
+            </form>
+
+    </div>
+
+{%endblock%}
