@@ -9,7 +9,7 @@
 
 <div id="login">
 
-    <div class="headertop">
+    <div class="headertop" style="min-width: 400px;">
         <img src="{% static 'img/samulogo.png' %}">
     </div>
     <form action="{% url 'index_login' %}" method="POST"> {% csrf_token %}

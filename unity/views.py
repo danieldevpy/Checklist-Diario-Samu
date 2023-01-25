@@ -10,7 +10,6 @@ def login(request):
     if request.method == 'GET':
         return render(request, 'login.html')
                 
-        
     elif request.method == 'POST':
         loginx = request.POST.get('unity').lower()
         password = request.POST.get('password').lower()
