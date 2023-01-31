@@ -120,7 +120,7 @@ def registros_mensal(request):
                 # for registro in registro_vtr:
                 #     print(registro.km, registro.pub_date)
                 context['infosday'] =  zip([str(f'1 a {day}/{_mes}/{_ano}')], [vtr])
-                
+
                 if objects:
                     for obj1 in objects:
                         obj1.date = str(obj1.date)[8:10]
