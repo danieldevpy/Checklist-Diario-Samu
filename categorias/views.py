@@ -10,13 +10,13 @@ def index(request):
     if request.user.is_authenticated:
         user = request.user 
         if user.usa and user.usb:
-            categorias = Categoria.objects.filter()
+            categorias = Categoria.objects.filter().order_by('name')
             last = RegistrosDiario.objects.filter(unity=user.unity).last()
         elif user.usa:
-            categorias = Categoria.objects.filter(usa=True)
+            categorias = Categoria.objects.filter(usa=True).order_by('name')
             last = RegistrosDiario.objects.filter(unity=user.unity, acesso='usa').last()
         elif user.usb:
-            categorias = Categoria.objects.filter(usb=True)
+            categorias = Categoria.objects.filter(usb=True).order_by('name')
             last = RegistrosDiario.objects.filter(unity=user.unity, acesso='usb').last()
 
 
@@ -107,19 +107,30 @@ def registros_mensal(request):
 
             if request.method == 'POST':
                 day = 31
-                _mes = request.POST.get('mes')
-                _ano = request.POST.get('ano')
-                if _mes == '04' or _mes == '06' or _mes == '09' or _mes == '11':
+                _mes = int(request.POST.get('mes'))
+                _ano = int(request.POST.get('ano'))
+                _copy_mes = None
+                _copy_ano = _ano
+
+                if _mes == 4 or _mes == 6 or _mes == 9 or _mes == 11:
                     day = 30
-                elif _mes == '02':
+                elif _mes == 2:
                     day = 28
+
+                if _mes == 12:
+                    _copy_mes = 1
+                    _copy_ano += 1
+                else:
+                    _copy_mes = _mes + 1
+
                 _viatura = request.POST.get('select_viaturas')
-                objects = RegistroItemDiario.objects.filter(vtr=_viatura, date__range=(date(int(_ano),int(_mes),1), date(int(_ano), int(_mes), day)))
+                objects = RegistroItemDiario.objects.filter(vtr=_viatura, date__range=(date(_ano, _mes, 1), date(_copy_ano, _copy_mes, 1)))
                 vtr = Viatura.objects.filter(unidade=user.unity, id=_viatura).first()
-                registro_vtr = RegistrosDiario.objects.filter(viatura__id=_viatura, pub_date__range=(date(int(_ano),int(_mes),1), date(int(_ano), int(_mes), day)))
+                registro_vtr = RegistrosDiario.objects.filter(viatura__id=_viatura, pub_date__range=(date(_ano, _mes, 1), date(_copy_ano, _copy_mes, 1)))
+                print(registro_vtr)
                 # for registro in registro_vtr:
                 #     print(registro.km, registro.pub_date)
-                context['infosday'] =  zip([str(f'1 a {day}/{_mes}/{_ano}')], [vtr])
+                context['infosday'] =  zip([str(f'1/{_mes}/{_ano} a 1/{_copy_mes}/{_copy_ano}')], [vtr])
 
                 if objects:
                     for obj1 in objects:

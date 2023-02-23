@@ -19,13 +19,18 @@ class Insumo(models.Model):
     category = models.ForeignKey(Categoria, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
+        verification = False
+        # este if serve para que a condição só seja executada em create
+        if not self.id:
+            verification = True
         # este if serve para que a condição só seja executada em create
         super().save(*args, **kwargs)
-        item = Insumo.objects.filter(name=self.name).last()
-        unitys = Unidade.objects.all()
-        for unity in unitys:
-            new = Carga(unity=unity, item=item, charge=0)
-            new.save()
+        if verification:
+            item = Insumo.objects.filter(name=self.name).last()
+            unitys = Unidade.objects.all()
+            for unity in unitys:
+                new = Carga(unity=unity, item=item, charge=0)
+                new.save()
 
 
     def __str__(self):

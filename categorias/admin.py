@@ -23,7 +23,7 @@ class AdminUnity(admin.ModelAdmin):
 class AdminChargeItem(admin.ModelAdmin):
     model = Carga
     list_display = ('item', 'get_name_category', 'charge', 'unity',)
-    list_filter = ('unity', 'item__category__name',)
+    list_filter = ( 'item__category__name',)
     list_editable = ('charge',)
 
     def get_name_category(self, obj):
@@ -48,7 +48,7 @@ class AdminRegisterItemDay(admin.ModelAdmin):
 
 class AdminRegisterDay(admin.ModelAdmin):
     list_display = ('name', 'unity', 'viatura', 'km', 'acesso','pdf', 'pub_date')
-    list_filter = ('unity', 'pub_date')
+    list_filter = ('viatura__name', 'pub_date')
     search_fields = ('viatura__name', )
 
     def get_queryset(self, request):
@@ -60,7 +60,7 @@ class AdminRegisterDay(admin.ModelAdmin):
 
 class AdminVtr(admin.ModelAdmin):
     list_display = ('name', 'placa', 'unidade')
-    list_filter = ('unidade',)
+    # list_filter = ('unidade',)
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
