@@ -5,6 +5,7 @@ from categorias import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('checklist/', views.index, name='index'),
     path('finalizar/', views.finalizar, name='finalizar'),
     path('registros/', views.registros_mensal, name='registros'),
     path('user/', include('unity.urls'), name='user'),
