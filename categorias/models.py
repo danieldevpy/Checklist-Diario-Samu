@@ -5,7 +5,7 @@ from django.db import models
 
 # Create your models here.
 class Categoria(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, verbose_name='Nome')
     usa = models.BooleanField(default=True, verbose_name='USA')
     usb = models.BooleanField(default=True, verbose_name='USB')
 
@@ -15,8 +15,8 @@ class Categoria(models.Model):
 
 
 class Insumo(models.Model):
-    name = models.CharField(max_length=200)
-    category = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200, verbose_name='Nome')
+    category = models.ForeignKey(Categoria, on_delete=models.CASCADE, verbose_name='Categoria')
 
     def save(self, *args, **kwargs):
         verification = False
@@ -39,23 +39,23 @@ class Insumo(models.Model):
 
 # Create your models here.
 class Unidade(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, verbose_name='Nome')
 
     def __str__(self):
         return self.name
 
 
 class Carga(models.Model):
-    unity = models.ForeignKey(Unidade, on_delete=models.CASCADE)
-    item = models.ForeignKey(Insumo, on_delete=models.CASCADE)
-    charge = models.IntegerField()
+    unity = models.ForeignKey(Unidade, on_delete=models.CASCADE, verbose_name='Unidade')
+    item = models.ForeignKey(Insumo, on_delete=models.CASCADE, verbose_name='Insumo')
+    charge = models.IntegerField(verbose_name='Carga')
 
     def __str__(self):
         return f'{self.item}  ({self.unity})'
 
 
 class Viatura(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, verbose_name='Nome')
     placa = models.CharField(max_length=200)
     unidade = models.ForeignKey(Unidade, on_delete=models.CASCADE)
     ativo = models.BooleanField(default=True, verbose_name='Viatura ativa')
@@ -69,7 +69,7 @@ class RegistroItemDiario(models.Model):
     carga = models.IntegerField()
     unidade = models.ForeignKey(Unidade, on_delete=models.CASCADE)
     vtr = models.ForeignKey(Viatura, on_delete=models.CASCADE)
-    date = models.DateTimeField(default=datetime.now, null=True)
+    date = models.DateTimeField(default=datetime.now, null=True, verbose_name='Data')
 
     def __str__(self):
         return self.item.name
@@ -78,7 +78,7 @@ class RegistroItemDiario(models.Model):
 class RegistrosDiario(models.Model):
     name = models.CharField(max_length=200)
     cargo = models.CharField(max_length=200)
-    unity = models.ForeignKey(Unidade, on_delete=models.PROTECT)
+    unity = models.ForeignKey(Unidade, on_delete=models.PROTECT, verbose_name='Unidade')
     acesso = models.CharField(max_length=200)
     viatura = models.ForeignKey(Viatura, on_delete=models.CASCADE)
     km = models.CharField(max_length=200)
