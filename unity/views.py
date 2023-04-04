@@ -1,10 +1,8 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as login_django
 from django.contrib.auth import logout as logout_django
 from django.contrib import messages
-# Create your views here.
-
 
 def login(request):
     if request.method == 'GET':
@@ -14,7 +12,6 @@ def login(request):
         loginx = request.POST.get('unity').lower()
         password = request.POST.get('password').lower()
         user = authenticate(username=loginx, password=password)
-        
         if user:
             login_django(request, user)
             return redirect('/')
@@ -23,6 +20,5 @@ def login(request):
             return render(request, 'login.html')
 
 def logout(request):
-
     logout_django(request)
     return redirect('/')

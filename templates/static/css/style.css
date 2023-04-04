@@ -108,15 +108,18 @@ main{
     flex-direction:column;
     margin: 1%;
 }
- table, th, td {
-  padding:5px;
-  height:100%;
-  font-family: 'Poppins';
-  color: #1C1C1C;
+table{
+    width: 100%;
 }
+th, td {
+    padding:5px;
+    height:100%;
+    font-family: 'Poppins';
+    color: #1C1C1C;
+  }
 th, td{
     border: 1px solid #ccd0d0;
-    width: 30%;
+    max-width: 30%;
     height:100%;
     word-wrap: break-word;
     background-color:#F2F2F2;
@@ -202,6 +205,7 @@ div[name*="pacote_fim"]:hover{
     background-color: #d4edda;
     border-color: #c3e6cb;
 }
+
 @media (max-width: 574px){
     .header{
         width: 100%;

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block unidade %}
-<script>const mensal = new Mensal();</script>
+
     <div class="headerleft">
         <img src="{% static 'img/samulogo.png' %}">
         <h2> Checklist Diário </h2>
@@ -60,60 +60,23 @@
         </form>
     </div>
     {% if objects %}
-
+        {% for vtr in vtrs %}
+        <script>mensal.register("{{vtr.viatura.name}}", "KM", "{{vtr.km}}", "{{vtr.pub_date}}", "NO");</script>
+        {% endfor %}
         {% for date, infovtr in infosday %}
                 <div style='width: 100%;display: flex;gap:5px; padding: 10px;align-items: center;justify-content: center;'>
                     <h3 style="font-family: 'Poppins';">Relatorio Mensal data: </h3>
                     <h3 style="font-family: 'Poppins'; color:brown;">{{ date }}</h3>
                 </div>
-
-                <table >
-                    <tr>
-                        <th>{{ infovtr.name }}</th>
-                            {% for dias in range %}
-                                <th>{{ dias }}</th>
-                            {% endfor %}
-                        </tr>
-                        <td>KM</td>
-                        {% for dia in range%}
-                        <td id="{{infovtr.name}}{{dia}}"></td>
-                        {% for obj in vtrs%}
-                                {% if obj.pub_date == dia%}
-                                    <script>mensal.setar('{{infovtr.name}}{{dia}}',' {{obj.km}}')</script>
-                                {% endif %}
-                            {% endfor %}
-                        {% endfor %}
-                </table>    
-            {% endfor %}
-        {% for categoria in categorias%}
-            <table >
-                <tr>
-                    <th>{{ categoria.name }}</th>
-                    <th>Carga</th>
-                        {% for dias in range %}
-                            <th>{{ dias }}</th>
-                        {% endfor %}
-                    </tr>
-                    {% for instancia in items %}
-                        {% if instancia.item.category == categoria %}
-                            <tr>
-                            <td>{{ instancia.item.name }}</td>
-                            <td id="{{instancia.item.id}}carga">0</td>    
-                                {% for dia in range%}
-                                <td id="{{instancia.item.id}}{{dia}}"></td>
-                                    {% for obj in objects%}
-                                        {% if obj.item.name == instancia.item.name and obj.date == dia%}
-                                            <script>mensal.setar({{instancia.item.id}}{{dia}}, {{obj.carga}})</script>
-                                            <script>mensal.setar('{{instancia.item.id}}carga', {{instancia.charge}})</script>
-                                        {% endif %}
-                                    {% endfor %}
-
-                                {% endfor %}
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-            </table>
         {% endfor %}
+        <div id="container">
+
+        </div>
+        <script> mensal.config("{{days}}")</script>
+        {% for obj in objects %}
+                <script>mensal.register("{{obj.item.item.category}}", "{{obj.item.item.name}}", "{{obj.carga}}", "{{obj.date}}", "{{obj.item.charge}}");</script>
+        {% endfor %}
+        <script>mensal.create()</script>
 
     {% else %}
         <div style='width: 100%;display: flex;padding: 10px;flex-direction:column;align-items: center;justify-content: center;'>

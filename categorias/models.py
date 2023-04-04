@@ -13,7 +13,6 @@ class Categoria(models.Model):
         return self.name
 
 
-
 class Insumo(models.Model):
     name = models.CharField(max_length=200, verbose_name='Nome')
     category = models.ForeignKey(Categoria, on_delete=models.CASCADE, verbose_name='Categoria')
@@ -41,6 +40,20 @@ class Insumo(models.Model):
 class Unidade(models.Model):
     name = models.CharField(max_length=200, verbose_name='Nome')
 
+    def save(self, *args, **kwargs):
+        verification = False
+        # este if serve para que a condição só seja executada em create
+        if not self.id:
+            verification = True
+        # este if serve para que a condição só seja executada em create
+        super().save(*args, **kwargs)
+        if verification:
+            print('criou uma nova')
+            insumos = Insumo.objects.all()
+            for insumo in insumos:
+                create = Carga(unity=self, item=insumo, charge=0)
+                create.save()
+
     def __str__(self):
         return self.name
 
@@ -65,22 +78,22 @@ class Viatura(models.Model):
 
 
 class RegistroItemDiario(models.Model):
-    item = models.ForeignKey(Insumo, on_delete=models.CASCADE)
+    item = models.ForeignKey(Carga, on_delete=models.CASCADE)
     carga = models.IntegerField()
     unidade = models.ForeignKey(Unidade, on_delete=models.CASCADE)
-    vtr = models.ForeignKey(Viatura, on_delete=models.CASCADE)
+    vtr = models.ForeignKey(Viatura, on_delete=models.SET_NULL, null=True)
     date = models.DateTimeField(default=datetime.now, null=True, verbose_name='Data')
 
     def __str__(self):
-        return self.item.name
+        return self.item.item.name
 
 
 class RegistrosDiario(models.Model):
     name = models.CharField(max_length=200)
     cargo = models.CharField(max_length=200)
-    unity = models.ForeignKey(Unidade, on_delete=models.PROTECT, verbose_name='Unidade')
+    unity = models.ForeignKey(Unidade, on_delete=models.CASCADE, verbose_name='Unidade')
     acesso = models.CharField(max_length=200)
-    viatura = models.ForeignKey(Viatura, on_delete=models.CASCADE)
+    viatura = models.ForeignKey(Viatura, on_delete=models.SET_NULL, null=True)
     km = models.CharField(max_length=200)
     pdf = models.FileField(upload_to=f'pdf/%d-%m-%Y', blank=True, null=True, verbose_name='Pdf')
     pub_date = models.DateTimeField(default=datetime.now, null=True)

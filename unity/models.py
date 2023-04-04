@@ -34,7 +34,7 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractUser):
     username = models.CharField(max_length=45, unique=True)
-    unity = models.ForeignKey(Unidade, null=True, on_delete=models.CASCADE)
+    unity = models.ForeignKey(Unidade, null=True, on_delete=models.SET_NULL)
     usa = models.BooleanField(default=True, verbose_name='USA')
     usb = models.BooleanField(default=True, verbose_name='USB')
     objects = CustomUserManager()

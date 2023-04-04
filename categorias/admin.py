@@ -14,17 +14,18 @@ class AdminItem(admin.ModelAdmin):
     list_display = ('name', 'category')
     list_filter = ('category',)
     list_editable = ('category',)
+    search_fields = ('name', )
 
 
 class AdminUnity(admin.ModelAdmin):
-    pass
-
+    search_fields = ('name',)
 
 class AdminChargeItem(admin.ModelAdmin):
     model = Carga
     list_display = ('item', 'get_name_category', 'charge', 'unity',)
     list_filter = ( 'item__category__name',)
     list_editable = ('charge',)
+    search_fields = ('unity__name', 'item__name')
 
     def get_name_category(self, obj):
         return obj.item.category.name
@@ -43,13 +44,12 @@ class AdminRegisterItemDay(admin.ModelAdmin):
     list_display = ('item', 'carga', 'unidade', 'vtr', 'date')
     list_editable = ('date',)
     list_filter = ('date', 'vtr')
-    search_fields = ('item__name', )
+    list_filter = ( 'unidade__name',)
 
 
 class AdminRegisterDay(admin.ModelAdmin):
     list_display = ('name', 'unity', 'viatura', 'km', 'acesso','pdf', 'pub_date')
-    list_filter = ('viatura__name', 'pub_date')
-    search_fields = ('viatura__name', )
+    search_fields = ('name', 'viatura__name', 'unity__name')
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -60,7 +60,7 @@ class AdminRegisterDay(admin.ModelAdmin):
 
 class AdminVtr(admin.ModelAdmin):
     list_display = ('name', 'placa', 'unidade')
-    # list_filter = ('unidade',)
+    search_fields = ('name', 'unidade__name', 'placa')
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
