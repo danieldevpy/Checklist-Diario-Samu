@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-#qg1mw9s2%r-5pfv41^p6)k8)j#d*52sd+kekvomv3_@6-bs#m
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ["http://checklist.cisbaf.org.br/"]
+CSRF_TRUSTED_ORIGINS = ["http://checklist.cisbaf.org.br"]
 # Application definition
 
 INSTALLED_APPS = [
