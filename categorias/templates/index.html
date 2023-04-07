@@ -81,7 +81,7 @@
                                 </tr>
                                 <tr>
                                     <td>KM</td>
-                                    <td><input type="text" class="input" name="km"></td>
+                                    <td><input type="text" class="input" name="km"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"></td>
                                 </tr>
 
                         </table>
