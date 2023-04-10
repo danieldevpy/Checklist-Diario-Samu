@@ -3,10 +3,12 @@ from categorias.models import Unidade, Insumo, Carga
 
 
 def insertChargeItem(request):
-    unitys = Unidade.objects.all()
-    items = Insumo.objects.all()
-    for unity in unitys:
-        for item in items:
-            create = Carga(unity=unity, item=item, charge=0)
-            create.save()
-    return HttpResponse('Itens criados para todas unidades')
+    pass
+    # unitys = Unidade.objects.filter(name='Queimados').first()
+    # allinsumos = Insumo.objects.all()
+    # for insumo in allinsumos:
+    #     n = Carga(unity=unitys, item=insumo, charge=0)
+    #     n.save()
+    # print(unitys)
+    # return HttpResponse('unitys')
+    
