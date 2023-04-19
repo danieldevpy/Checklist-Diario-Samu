@@ -19,9 +19,10 @@
         {% else %}
         <label>Logado na unidade de <b>{{user.unity}}</b></label>
         {% endif %}
+
+        {% if user.is_staff %}
         <label>Ultimo checklist feito: <b>{{last}}</b></label>
         <br>
-        {% if user.is_staff %}
         <label><a href="/registros">Registros Mensal</a></label>
         <label><a href="/admin" target="_blank">Acesso Administrativo</a></label>
         {% endif %}
