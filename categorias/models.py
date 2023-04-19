@@ -79,7 +79,7 @@ class Viatura(models.Model):
 
 class RegistroItemDiario(models.Model):
     item = models.ForeignKey(Carga, on_delete=models.CASCADE)
-    carga = models.IntegerField()
+    carga = models.CharField(max_length=15)
     unidade = models.ForeignKey(Unidade, on_delete=models.CASCADE)
     vtr = models.ForeignKey(Viatura, on_delete=models.SET_NULL, null=True)
     date = models.DateTimeField(default=datetime.now, null=True, verbose_name='Data')
