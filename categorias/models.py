@@ -48,7 +48,6 @@ class Unidade(models.Model):
         # este if serve para que a condição só seja executada em create
         super().save(*args, **kwargs)
         if verification:
-            print('criou uma nova')
             insumos = Insumo.objects.all()
             for insumo in insumos:
                 create = Carga(unity=self, item=insumo, charge=0)
