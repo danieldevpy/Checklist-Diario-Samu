@@ -8,6 +8,7 @@ import time
 import unittest
 
 
+
 class TestCaseSelenium(unittest.TestCase):
         
         def setUp(self):
@@ -16,7 +17,7 @@ class TestCaseSelenium(unittest.TestCase):
             self.driver = webdriver.Chrome(chrome_options=self.options, service=ChromeService(ChromeDriverManager().install()))
 
         def test_complete(self):
-            self.driver.get("http://localhost:8000/")
+            self.driver.get("http://checklist.cisbaf.org.br/")
             name = self.driver.find_element(By.NAME, "unity")
             name.send_keys("admin")
             passw = self.driver.find_element(By.NAME, "password")
