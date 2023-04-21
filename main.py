@@ -12,7 +12,7 @@ class TestCaseSelenium(unittest.TestCase):
         
         def setUp(self):
             self.options = ChromeOptions()
-            self.options.headless = True
+            self.options.headless = False
             self.driver = webdriver.Chrome(chrome_options=self.options, service=ChromeService(ChromeDriverManager().install()))
 
         def test_complete(self):
