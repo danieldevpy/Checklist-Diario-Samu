@@ -10,14 +10,17 @@ def index(request):
         if user.usa and user.usb:
             categorias = Categoria.objects.filter().order_by('name')
             last = RegistrosDiario.objects.filter(unity=user.unity).last()
+            items = Carga.objects.filter(unity=user.unity).order_by('item__name')
         elif user.usa:
             categorias = Categoria.objects.filter(usa=True).order_by('name')
             last = RegistrosDiario.objects.filter(unity=user.unity, acesso='usa').last()
+            items = Carga.objects.filter(unity=user.unity).order_by('item__name')
         elif user.usb:
             categorias = Categoria.objects.filter(usb=True).order_by('name')
             last = RegistrosDiario.objects.filter(unity=user.unity, acesso='usb').last()
+            items = Carga.objects.filter(unity=user.unity, item__usb=True).order_by('item__name')
 
-        items = Carga.objects.filter(unity=user.unity).order_by('item__name')
+   
         viaturas = Viatura.objects.filter(unidade=user.unity, ativo=True)
         if last:
             last_check = last.pub_date.strftime('%d/%m/%Y as '  "%H:%M:%S")
@@ -40,7 +43,6 @@ def index(request):
 def finalizar(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
-            respostas = []
             all_categorias = None
             all_registros = {}
             dados_preenchente = None
@@ -61,25 +63,35 @@ def finalizar(request):
             km = request.POST.get('km')
             dados_preenchente = [f'Nome do Funcionário: {nome_completo}', f'Cargo: {cargo}', f'Unidade: {unidade.name}', f'Viatura: {viatura.name}, Placa: {placa}, KM: {km}']
 
+           
+            create_register = RegistrosDiario(
+                name=nome_completo, cargo=cargo, unity=unidade, acesso=acesso,
+                viatura=viatura, km=km
+            )
+            create_register.save()
+
             for category in all_categorias:
                 all_registros[category.name] = []
-                carga = Carga.objects.filter(unity=user.unity, item__category=category).order_by('item__name')
+                if acesso == 'usb':
+                    carga = Carga.objects.filter(unity=user.unity, item__category=category, item__usb=True).order_by('item__name')
+                else:
+                    carga = Carga.objects.filter(unity=user.unity, item__category=category).order_by('item__name')
                 for obj in carga:
                     value = request.POST.get(str(obj.id))
                     all_registros[category.name].append((obj.item.name, value))
                     register_item = RegistroItemDiario(
+                    preenchimento=create_register,
                     item=obj,
                     carga=value,
                     unidade=user.unity,
                     vtr=viatura
                     )
                     register_item.save()
+
             pdf = crate_pdf(user.unity.name, dados_preenchente, all_registros)
-            create_register = RegistrosDiario(
-                name=nome_completo, cargo=cargo, unity=unidade, acesso=acesso,
-                viatura=viatura, km=km, pdf=pdf
-            )
+            create_register.pdf = pdf
             create_register.save()
+
             datax = datetime.now().strftime('%d/%m/%Y as '  "%H:%M:%S")
             context = {
             'dataatual': datax

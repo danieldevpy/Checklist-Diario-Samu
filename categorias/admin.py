@@ -11,9 +11,9 @@ class AdminCategory(admin.ModelAdmin):
 
 
 class AdminItem(admin.ModelAdmin):
-    list_display = ('name', 'category')
+    list_display = ('name', 'category', 'usa', 'usb')
     list_filter = ('category',)
-    list_editable = ('category',)
+    list_editable = ('category', 'usa', 'usb')
     search_fields = ('name', )
 
 

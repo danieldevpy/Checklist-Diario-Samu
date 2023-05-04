@@ -16,6 +16,9 @@ class Categoria(models.Model):
 class Insumo(models.Model):
     name = models.CharField(max_length=200, verbose_name='Nome')
     category = models.ForeignKey(Categoria, on_delete=models.CASCADE, verbose_name='Categoria')
+    usa = models.BooleanField(default=True, verbose_name='USA')
+    usb = models.BooleanField(default=True, verbose_name='USB')
+
 
     def save(self, *args, **kwargs):
         verification = False
@@ -76,17 +79,6 @@ class Viatura(models.Model):
         return self.name
 
 
-class RegistroItemDiario(models.Model):
-    item = models.ForeignKey(Carga, on_delete=models.CASCADE)
-    carga = models.CharField(max_length=15)
-    unidade = models.ForeignKey(Unidade, on_delete=models.CASCADE)
-    vtr = models.ForeignKey(Viatura, on_delete=models.SET_NULL, null=True)
-    date = models.DateTimeField(default=datetime.now, null=True, verbose_name='Data')
-
-    def __str__(self):
-        return self.item.item.name
-
-
 class RegistrosDiario(models.Model):
     name = models.CharField(max_length=200)
     cargo = models.CharField(max_length=200)
@@ -100,3 +92,14 @@ class RegistrosDiario(models.Model):
     def __str__(self):
         return f'{self.name}'
     
+
+class RegistroItemDiario(models.Model):
+    preenchimento = models.ForeignKey(RegistrosDiario, on_delete=models.CASCADE, null=True)
+    item = models.ForeignKey(Carga, on_delete=models.CASCADE)
+    carga = models.CharField(max_length=15)
+    unidade = models.ForeignKey(Unidade, on_delete=models.CASCADE)
+    vtr = models.ForeignKey(Viatura, on_delete=models.SET_NULL, null=True)
+    date = models.DateTimeField(default=datetime.now, null=True, verbose_name='Data')
+
+    def __str__(self):
+        return self.item.item.name
