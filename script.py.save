@@ -1,0 +1,32 @@
+import sqlite3
+import psycopg2
+
+# Conexão com o banco de dados SQLite
+sqlite_conn = sqlite3.connect('./db.sqlite3')
+sqlite_cursor = sqlite_conn.cursor()
+
+# Conexão com o banco de dados PostgreSQL
+pg_conn = psycopg2.connect(
+    host='192.168.1.232',
+    dbname='checklist',
+    user='root',
+    password='123456'
+)
+pg_cursor = pg_conn.cursor()
+
+# Seleciona os dados da tabela SQLite
+sqlite_cursor.execute('SELECT * FROM nome_da_tabela')
+rows = sqlite_cursor.fetchall()
+
+# Insere os dados no PostgreSQL
+for row in rows:
+    pg_cursor.execute('INSERT INTO nome_da_tabela (coluna1, coluna2) VALUES (%s, %s)', row)
+
+# Efetiva as alterações no PostgreSQL
+pg_conn.commit()
+
+# Fecha as conexões
+sqlite_cursor.close()
+sqlite_conn.close()
+pg_cursor.close()
+pg_conn.close()
