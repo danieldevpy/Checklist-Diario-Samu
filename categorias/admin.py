@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Categoria, Insumo, Carga, RegistrosDiario, Unidade, Viatura, RegistroItemDiario
 import time
+from django.utils.html import format_html
 
 # Register your models here.
 
@@ -50,6 +51,16 @@ class AdminRegisterItemDay(admin.ModelAdmin):
 class AdminRegisterDay(admin.ModelAdmin):
     list_display = ('name', 'unity', 'viatura', 'km', 'acesso','pdf', 'pub_date')
     search_fields = ('name', 'viatura__name', 'unity__name')
+    readonly_fields = ('display_pdf_link',)  # Certifique-se de adicionar o campo readonly ao tuple
+
+    def display_pdf_link(self, instance):
+        if instance.pdf:
+            url = instance.pdf  # Altere para o atributo correto do seu modelo
+            return format_html('<a href="{}">{}</a>', url, url)
+        else:
+            return None
+
+    display_pdf_link.short_description = 'PDF Link'
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)

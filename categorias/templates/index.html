@@ -24,10 +24,11 @@ CheckList Diário Samu
         {% endif %}
 
         {% if user.is_staff %}
-        <label>Ultimo checklist feito: <b>{{last}}</b></label>
+        <label style="color: red">Painel Administrativo em manutenção! </label>
+        <!-- <label>Ultimo checklist feito: <b>{{last}}</b></label>
         <br>
         <label><a href="/registros">Registros Mensal</a></label>
-        <label><a href="/admin" target="_blank">Acesso Administrativo</a></label>
+        <label><a href="/admin" target="_blank">Acesso Administrativo</a></label> -->
         {% endif %}
         <label><a href="{% url 'logout' %}">Sair</a></label>
     </div>

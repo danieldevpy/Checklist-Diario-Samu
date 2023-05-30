@@ -23,19 +23,15 @@ class PDF(FPDF):
 
 
 
-def crate_pdf(unidade, dados_preenchente, registros):
+def crate_pdf_temporario(dados_preenchente, registers):
     # Crie o objeto HttpResponse com o cabeçalho PDF apropriado.
 
     now = datetime.now()
     data = now.strftime('%d-%m-%Y')
     hr = now.strftime('%H-%M-%S')
     path = 'media/'
-    name = f'pdf/{data}/{str(unidade)}-{hr}.pdf'
-    exist = os.path.exists(f'{path}/pdf/{data}')
-    if not exist:
-        os.mkdir(f'{path}/pdf/{data}')
-
-
+    name = f'pdf/{hr}.pdf'
+    print("criando")
     #começando
     pdf = PDF()
     pdf.add_page()
@@ -52,24 +48,49 @@ def crate_pdf(unidade, dados_preenchente, registros):
     line_height = pdf.font_size * 2.5
     col_width = pdf.epw / 4  # distribute content evenly
 
+    columns = {}
 
-    for category in registros:
-        pdf.set_font("Helvetica", "I", 10)
-        pdf.set_fill_color(242, 242, 242)
-        pdf.cell(0, 12, category.upper(), new_y="NEXT", fill=True, align="C")
-        pdf.ln(1)
-        pdf.set_fill_color(255, 255, 255)
-        pdf.set_draw_color(77, 77, 77)
-        pdf.set_font("Times", size=10)
-        for row in registros[category]:
+    for register in registers:
+        if not register['category'] in columns:
+            columns[register['category']] = True
+            pdf.ln(2)
+            pdf.set_font("Helvetica", "I", 10)
+            pdf.set_fill_color(242, 242, 242)
+            pdf.cell(0, 12, register['category'].upper(), new_y="NEXT", fill=True, align="C")
+            pdf.ln(1)
+            pdf.set_fill_color(255, 255, 255)
+            pdf.set_draw_color(77, 77, 77)
+            pdf.set_font("Times", size=10)
             pdf.cell(col_width/2)
-            for datum in row:
-                pdf.multi_cell(col_width + col_width/2, line_height, datum, border=1,
-                        new_x="RIGHT", new_y="TOP", max_line_height=pdf.font_size, fill=True)
-            pdf.ln(line_height)
-        pdf.ln(2)
+            pdf.multi_cell(col_width + col_width/2, line_height, register['name'], border=1,
+                new_x="RIGHT", new_y="TOP", max_line_height=pdf.font_size, fill=True)
+            pdf.multi_cell(col_width + col_width/2, line_height, register['value'], border=1,
+                new_x="RIGHT", new_y="TOP", max_line_height=pdf.font_size, fill=True)
+        else:
+            pdf.cell(col_width/2)
+            pdf.multi_cell(col_width + col_width/2, line_height, register['name'], border=1,
+                new_x="RIGHT", new_y="TOP", max_line_height=pdf.font_size, fill=True)
+            pdf.multi_cell(col_width + col_width/2, line_height, register['value'], border=1,
+                new_x="RIGHT", new_y="TOP", max_line_height=pdf.font_size, fill=True)
+        pdf.ln(line_height)
+
+    # for category in registros:
+    #     pdf.set_font("Helvetica", "I", 10)
+    #     pdf.set_fill_color(242, 242, 242)
+    #     pdf.cell(0, 12, category.upper(), new_y="NEXT", fill=True, align="C")
+    #     pdf.ln(1)
+    #     pdf.set_fill_color(255, 255, 255)
+    #     pdf.set_draw_color(77, 77, 77)
+    #     pdf.set_font("Times", size=10)
+    #     for row in registros[category]:
+    #         pdf.cell(col_width/2)
+    #         for datum in row:
+    #             pdf.multi_cell(col_width + col_width/2, line_height, datum, border=1,
+    #                     new_x="RIGHT", new_y="TOP", max_line_height=pdf.font_size, fill=True)
+    #         pdf.ln(line_height)
+    #     pdf.ln(2)
 
 
     pdf.output(path+name)
-    return name
+    return path+name
  

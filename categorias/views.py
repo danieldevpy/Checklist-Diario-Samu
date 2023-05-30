@@ -1,7 +1,10 @@
+import json
+from django.http import FileResponse
 from .models import Categoria, Carga, RegistrosDiario, Viatura, RegistroItemDiario
 from django.shortcuts import render, redirect
 from datetime import datetime, date
-from .pdf import crate_pdf
+from .pdf import crate_pdf_temporario
+import os
 
 
 def index(request):
@@ -44,9 +47,8 @@ def finalizar(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             all_categorias = None
-            all_registros = {}
-            dados_preenchente = None
             user = request.user
+            # filter
             acesso = 'usa'
             if user.usa:
                 acesso = 'usa'
@@ -54,47 +56,36 @@ def finalizar(request):
             elif user.usb:
                 acesso = 'usb'
                 all_categorias = Categoria.objects.filter(usb=True).all()
+
+            # get to form
             nome_completo = request.POST.get('nomecompleto')
             cargo = request.POST.get('cargo')
             unidade = user.unity
             _viatura = request.POST.get('select_viaturas')
-            viatura = Viatura.objects.filter(id=_viatura).first()
-            placa = viatura.placa
             km = request.POST.get('km')
-            dados_preenchente = [f'Nome do Funcionário: {nome_completo}', f'Cargo: {cargo}', f'Unidade: {unidade.name}', f'Viatura: {viatura.name}, Placa: {placa}, KM: {km}']
 
-           
-            create_register = RegistrosDiario(
-                name=nome_completo, cargo=cargo, unity=unidade, acesso=acesso,
-                viatura=viatura, km=km
-            )
-            create_register.save()
-
+            to_json = []
             for category in all_categorias:
-                all_registros[category.name] = []
                 if acesso == 'usb':
                     carga = Carga.objects.filter(unity=user.unity, item__category=category, item__usb=True).order_by('item__name')
                 else:
                     carga = Carga.objects.filter(unity=user.unity, item__category=category).order_by('item__name')
                 for obj in carga:
-                    value = request.POST.get(str(obj.id))
-                    all_registros[category.name].append((obj.item.name, value))
-                    register_item = RegistroItemDiario(
-                    preenchimento=create_register,
-                    item=obj,
-                    carga=value,
-                    unidade=user.unity,
-                    vtr=viatura
-                    )
-                    register_item.save()
+                    value = request.POST.get(str(obj.pk))
+                    to_json.append({"id": obj.pk, "category": category.name, "name": obj.item.name, "value": value})
 
-            pdf = crate_pdf(user.unity.name, dados_preenchente, all_registros)
-            create_register.pdf = pdf
+            # crate
+            viatura = Viatura.objects.filter(id=_viatura).first()
+            create_register = RegistrosDiario(
+                name=nome_completo, cargo=cargo, unity=unidade, acesso=acesso,
+                viatura=viatura, km=km, items=json.dumps(to_json)
+            )
+            create_register.save()
+            create_register.pdf=f"pdf/{create_register.pk}"
             create_register.save()
 
-            datax = datetime.now().strftime('%d/%m/%Y as '  "%H:%M:%S")
             context = {
-            'dataatual': datax
+            'dataatual': datetime.now().strftime('%d/%m/%Y as '  "%H:%M:%S")
             }
             return render(request, 'finalizado.html', context)
     else:
@@ -145,3 +136,21 @@ def registros_mensal(request):
         else:
             return redirect('/')
 
+
+def view_pdf(request, pk):
+    register = RegistrosDiario.objects.filter(id=int(pk)).first()
+    print(register)
+    if not register:
+        return False
+    dados_preenchente = [f'Nome do Funcionário: {register.name}', f'Cargo: {register.cargo}', f'Unidade: {register.unity.name}', f'Viatura: {register.viatura.name}, Placa: {register.viatura.placa}, KM: {register.km}']
+    registers = json.loads(register.items)
+    print(registers)
+    pdf = crate_pdf_temporario(dados_preenchente, registers)
+    pdf_file = open(pdf, "rb")
+    os.remove(pdf)
+    response = FileResponse(pdf_file)
+    return response
+
+
+def update(request):
+    all_registers = RegistrosDiario.objects.all()

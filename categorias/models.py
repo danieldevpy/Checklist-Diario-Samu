@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.db import models
-
+from django.contrib.postgres.fields import JSONField
 
 
 # Create your models here.
@@ -33,6 +33,7 @@ class Unidade(models.Model):
         return self.name
 
 
+
 class Insumo(models.Model):
     name = models.CharField(max_length=200, verbose_name='Nome')
     category = models.ForeignKey(Categoria, on_delete=models.CASCADE, verbose_name='Categoria')
@@ -54,6 +55,8 @@ class Insumo(models.Model):
             for unity in unitys:
                 new = Carga(unity=unity, item=item, charge=0)
                 new.save()
+        
+
 
 
 
@@ -88,8 +91,11 @@ class RegistrosDiario(models.Model):
     acesso = models.CharField(max_length=200)
     viatura = models.ForeignKey(Viatura, on_delete=models.SET_NULL, null=True)
     km = models.CharField(max_length=200)
-    pdf = models.FileField(upload_to=f'pdf/%d-%m-%Y', blank=True, null=True, verbose_name='Pdf')
-    pub_date = models.DateTimeField(default=datetime.now, null=True)
+    pdf = models.URLField(max_length=200, null=True, blank=True)
+    items = models.JSONField(null=True, blank=True)
+    pub_date = models.DateTimeField(default=datetime.now, null=True, verbose_name="Data")
+
+    
 
     def __str__(self):
         return f'{self.name}'
