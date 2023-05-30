@@ -9,6 +9,5 @@ urlpatterns = [
     path('registros/', views.registros_mensal, name='registros'),
     path('user/', include('unity.urls'), name='user'),
     path('create_itemcharge/', insertChargeItem, name='t_create'),
-    path('pdf/<int:pk>', views.view_pdf, name="pdf"),
-    path('update',  views.update)
+    path('pdf/<int:pk>', views.view_pdf, name="pdf")
 ]

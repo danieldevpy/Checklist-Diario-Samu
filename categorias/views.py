@@ -1,6 +1,6 @@
 import json
 from django.http import FileResponse
-from .models import Categoria, Carga, RegistrosDiario, Viatura, RegistroItemDiario
+from .models import Categoria, Carga, RegistrosDiario, Viatura
 from django.shortcuts import render, redirect
 from datetime import datetime, date
 from .pdf import crate_pdf_temporario
@@ -92,49 +92,49 @@ def finalizar(request):
         return redirect('/')
 
 def registros_mensal(request):
-        if request.user.is_authenticated:
-            user = request.user 
-            viaturas = Viatura.objects.filter(unidade=user.unity, ativo=True)
-            context = {
-            'items': False,    
-            'viaturas': viaturas
-            }
-            if request.method == 'POST':
-                day = 31
-                _mes = int(request.POST.get('mes'))
-                _ano = int(request.POST.get('ano'))
-                _copy_mes = None
-                _copy_ano = _ano
+        # if request.user.is_authenticated:
+        #     user = request.user 
+        #     viaturas = Viatura.objects.filter(unidade=user.unity, ativo=True)
+        #     context = {
+        #     'items': False,    
+        #     'viaturas': viaturas
+        #     }
+        #     if request.method == 'POST':
+        #         day = 31
+        #         _mes = int(request.POST.get('mes'))
+        #         _ano = int(request.POST.get('ano'))
+        #         _copy_mes = None
+        #         _copy_ano = _ano
 
-                if _mes == 4 or _mes == 6 or _mes == 9 or _mes == 11:
-                    day = 30
-                elif _mes == 2:
-                    day = 28
+        #         if _mes == 4 or _mes == 6 or _mes == 9 or _mes == 11:
+        #             day = 30
+        #         elif _mes == 2:
+        #             day = 28
 
-                if _mes == 12:
-                    _copy_mes = 1
-                    _copy_ano += 1
-                else:
-                    _copy_mes = _mes + 1
+        #         if _mes == 12:
+        #             _copy_mes = 1
+        #             _copy_ano += 1
+        #         else:
+        #             _copy_mes = _mes + 1
             
-                _viatura = request.POST.get('select_viaturas')
-                objects = RegistroItemDiario.objects.filter(vtr=_viatura, date__range=(date(_ano, _mes, 1), date(_copy_ano, _copy_mes, 1))).all()
-                vtr = Viatura.objects.filter(unidade=user.unity, id=_viatura).first()
-                registro_vtr = RegistrosDiario.objects.filter(viatura__id=_viatura, pub_date__range=(date(_ano, _mes, 1), date(_copy_ano, _copy_mes, 1)))
-                context['infosday'] =  zip([str(f'1/{_mes}/{_ano} a 1/{_copy_mes}/{_copy_ano}')], [vtr])
-                if objects:
-                    for obj1 in objects:
-                        obj1.date = int(str(obj1.date)[8:10])
-                    for obj2 in registro_vtr:
-                        obj2.pub_date = int(str(obj2.pub_date)[8:10])
-                    context['objects'] = objects
-                    context['vtrs'] = registro_vtr
-                    context['days'] = day
-                return render(request, 'registros.html', context)
-            else:
-                return render(request, 'registros.html', context)
-        else:
-            return redirect('/')
+        #         _viatura = request.POST.get('select_viaturas')
+        #         objects = RegistroItemDiario.objects.filter(vtr=_viatura, date__range=(date(_ano, _mes, 1), date(_copy_ano, _copy_mes, 1))).all()
+        #         vtr = Viatura.objects.filter(unidade=user.unity, id=_viatura).first()
+        #         registro_vtr = RegistrosDiario.objects.filter(viatura__id=_viatura, pub_date__range=(date(_ano, _mes, 1), date(_copy_ano, _copy_mes, 1)))
+        #         context['infosday'] =  zip([str(f'1/{_mes}/{_ano} a 1/{_copy_mes}/{_copy_ano}')], [vtr])
+        #         if objects:
+        #             for obj1 in objects:
+        #                 obj1.date = int(str(obj1.date)[8:10])
+        #             for obj2 in registro_vtr:
+        #                 obj2.pub_date = int(str(obj2.pub_date)[8:10])
+        #             context['objects'] = objects
+        #             context['vtrs'] = registro_vtr
+        #             context['days'] = day
+        #         return render(request, 'registros.html', context)
+        #     else:
+        #         return render(request, 'registros.html', context)
+        # else:
+    return redirect('/')
 
 
 def view_pdf(request, pk):
@@ -144,13 +144,8 @@ def view_pdf(request, pk):
         return False
     dados_preenchente = [f'Nome do Funcionário: {register.name}', f'Cargo: {register.cargo}', f'Unidade: {register.unity.name}', f'Viatura: {register.viatura.name}, Placa: {register.viatura.placa}, KM: {register.km}']
     registers = json.loads(register.items)
-    print(registers)
-    pdf = crate_pdf_temporario(dados_preenchente, registers)
+    pdf = crate_pdf_temporario(dados_preenchente, registers, register.pub_date.strftime('%d-%m-%Y às %H:%M'))
     pdf_file = open(pdf, "rb")
     os.remove(pdf)
     response = FileResponse(pdf_file)
     return response
-
-
-def update(request):
-    all_registers = RegistrosDiario.objects.all()

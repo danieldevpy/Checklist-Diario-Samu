@@ -23,15 +23,13 @@ class PDF(FPDF):
 
 
 
-def crate_pdf_temporario(dados_preenchente, registers):
+def crate_pdf_temporario(dados_preenchente, registers, date):
     # Crie o objeto HttpResponse com o cabeçalho PDF apropriado.
 
     now = datetime.now()
-    data = now.strftime('%d-%m-%Y')
     hr = now.strftime('%H-%M-%S')
     path = 'media/'
     name = f'pdf/{hr}.pdf'
-    print("criando")
     #começando
     pdf = PDF()
     pdf.add_page()
@@ -41,7 +39,7 @@ def crate_pdf_temporario(dados_preenchente, registers):
         pdf.cell(0, 10, row, new_x="LMARGIN",)
         pdf.ln(5)
     pdf.ln(5)
-    pdf.cell(0, 10, f'Checklist preenchido em: {data}', new_x="LMARGIN", align="C")
+    pdf.cell(0, 10, f'Checklist preenchido em: {date}', new_x="LMARGIN", align="C")
     pdf.ln(15)
     
 

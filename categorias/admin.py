@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Categoria, Insumo, Carga, RegistrosDiario, Unidade, Viatura, RegistroItemDiario
+from .models import Categoria, Insumo, Carga, RegistrosDiario, Unidade, Viatura
 import time
 from django.utils.html import format_html
 
@@ -39,13 +39,7 @@ class AdminChargeItem(admin.ModelAdmin):
         if request.user.is_superuser:
             return qs
         return qs.filter(unity=request.user.unity)
-        
-
-class AdminRegisterItemDay(admin.ModelAdmin):
-    list_display = ('item', 'carga', 'unidade', 'vtr', 'date')
-    list_editable = ('date',)
-    list_filter = ('date', 'vtr')
-    list_filter = ( 'unidade__name',)
+    
 
 
 class AdminRegisterDay(admin.ModelAdmin):
@@ -84,6 +78,5 @@ admin.site.register(Categoria, AdminCategory)
 admin.site.register(Unidade, AdminUnity)
 admin.site.register(Insumo, AdminItem)
 admin.site.register(Carga, AdminChargeItem)
-admin.site.register(RegistroItemDiario, AdminRegisterItemDay)
 admin.site.register(RegistrosDiario, AdminRegisterDay)
 admin.site.register(Viatura, AdminVtr)
