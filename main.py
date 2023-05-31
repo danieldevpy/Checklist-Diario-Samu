@@ -64,6 +64,7 @@ class TestCaseSelenium(unittest.TestCase):
 
                 inputx.send_keys(f'{i}')
                 time.sleep(0.1)
+            time.sleep(5)
             self.assertIn("CheckList Finalizado", self.driver.title)
 
 
