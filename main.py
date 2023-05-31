@@ -17,7 +17,7 @@ class TestCaseSelenium(unittest.TestCase):
             self.driver = webdriver.Chrome(chrome_options=self.options, service=ChromeService(ChromeDriverManager().install()))
 
         def test_complete(self):
-            self.driver.get("http://localhost:8000")
+            self.driver.get("http://192.168.1.232:8000")
             name = self.driver.find_element(By.NAME, "unity")
             name.send_keys("admin")
             passw = self.driver.find_element(By.NAME, "password")
