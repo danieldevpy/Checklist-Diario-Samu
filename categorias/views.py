@@ -88,11 +88,7 @@ def finalizar(request):
             }
             return render(request, 'finalizado.html', context)
         else:
-            context = {
-            'dataatual': datetime.now().strftime('%d/%m/%Y as '  "%H:%M:%S"),
-            'preenchente': "Daniel"
-            }
-            return render(request, 'finalizado.html', context)
+            return redirect('/')
 
     else:
         return redirect('/')

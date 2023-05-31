@@ -17,11 +17,11 @@ class TestCaseSelenium(unittest.TestCase):
             self.driver = webdriver.Chrome(chrome_options=self.options, service=ChromeService(ChromeDriverManager().install()))
 
         def test_complete(self):
-            self.driver.get("http://localhost:8000")
+            self.driver.get("http://192.168.1.232:8000")
             name = self.driver.find_element(By.NAME, "unity")
-            name.send_keys("admin")
+            name.send_keys("novaiguacu_usa")
             passw = self.driver.find_element(By.NAME, "password")
-            passw.send_keys("admingeral")
+            passw.send_keys("novaiguacu@01")
             btn = self.driver.find_element(By.XPATH, '/html/body/main/div/form/div/input[3]')
             btn.click()
 
@@ -59,13 +59,13 @@ class TestCaseSelenium(unittest.TestCase):
                     km = self.driver.find_element(By.NAME, "km")
                     km.send_keys("0000")
                     btns[5].click()
-                    time.sleep(5)
+                    time.sleep(10)
                     break
 
                 inputx.send_keys(f'{i}')
                 time.sleep(0.1)
            
-            
+
             self.assertIn("CheckList Finalizado", self.driver.title)
 
 
