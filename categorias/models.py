@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.db import models
+from django.urls import reverse
 
 
 # Create your models here.
@@ -90,11 +91,8 @@ class RegistrosDiario(models.Model):
     acesso = models.CharField(max_length=200)
     viatura = models.ForeignKey(Viatura, on_delete=models.SET_NULL, null=True)
     km = models.CharField(max_length=200)
-    pdf = models.URLField(max_length=200, null=True, blank=True)
     items = models.JSONField(null=True, blank=True)
     pub_date = models.DateTimeField(default=datetime.now, null=True, verbose_name="Data")
-
-    
 
     def __str__(self):
         return f'{self.name}'

@@ -81,8 +81,6 @@ def finalizar(request):
                 viatura=viatura, km=km, items=json.dumps(to_json)
             )
             create_register.save()
-            create_register.pdf=f"pdf/{create_register.pk}"
-            create_register.save()
 
             context = {
             'dataatual': datetime.now().strftime('%d/%m/%Y as '  "%H:%M:%S")

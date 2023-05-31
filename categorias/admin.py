@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Categoria, Insumo, Carga, RegistrosDiario, Unidade, Viatura
 import time
+from django.urls import reverse
 from django.utils.html import format_html
 
 # Register your models here.
@@ -43,18 +44,18 @@ class AdminChargeItem(admin.ModelAdmin):
 
 
 class AdminRegisterDay(admin.ModelAdmin):
-    list_display = ('name', 'unity', 'viatura', 'km', 'acesso','pdf', 'pub_date')
+    fields = ['name', 'cargo', 'unity', 'acesso', 'viatura', 'km', 'pdf_link', 'items', 'pub_date']
+    list_display = ('name', 'unity', 'viatura', 'km', 'pdf_link', 'pub_date')
     search_fields = ('name', 'viatura__name', 'unity__name')
-    readonly_fields = ('display_pdf_link',)  # Certifique-se de adicionar o campo readonly ao tuple
 
-    def display_pdf_link(self, instance):
-        if instance.pdf:
-            url = instance.pdf  # Altere para o atributo correto do seu modelo
-            return format_html('<a href="{}">{}</a>', url, url)
-        else:
-            return None
+    readonly_fields = ['pdf_link']
+        
+    def pdf_link(self, obj):
+        url = reverse('pdf', args=[obj.pk])  # Substitua 'pdf_view' pelo nome da sua view de PDF
+        return format_html('<a href="{}" target="_blank">{}</a>', url, "Visualizar PDF")
 
-    display_pdf_link.short_description = 'PDF Link'
+    
+    pdf_link.short_description = 'LINK PARA VISUALIZAR O PDF'
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
