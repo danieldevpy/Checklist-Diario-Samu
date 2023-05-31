@@ -35,12 +35,48 @@ CheckList Finalizado
 
 {% block conteudo%}
 <div class="container">
-    <did class="headerbottom">
-    <h1>Checklist finalizado com sucesso!</h1>
+    <div class="headerbottom">
+
+    <h1>Checklist Finalizado!</h1>
     <label>{{ dataatual }}</label>
-    <img style="width: 50%;" src="{% static 'img/check.png' %}">
-    <a href="{% url 'index' %}"> <button class="btn">Voltar para o inicio</button></a>
-    <button class="btn" onclick="print();">Tirar print </button>
+    <label id="textarea"></label>
+    <div id="sugestao" style="display: none;">
+        <div style="display: flex;">
+            <textarea style="width: 100%;min-height: 30px;" placeholder="digite aqui para segerir..."></textarea>
+            <button>Enviar</button>
+        </div>
+        <div>
+            <a href="{% url 'index' %}"> <button class="btn">Voltar para o inicio</button></a>
+        </div>
+
+    </div>
+
     </div>
 </div>
+<script>
+    window.onload = function() { 
+    let text = "Parabéns, o checklist foi finalizado corretamente!\n\ Para ajudar a melhorar o sistema você pode sugerir alguma melhoria?";
+    let _textarea = document.getElementById("textarea");
+
+    const resolveAwait = ()=> {
+        return new Promise(resolve => {
+            setTimeout(() => {
+            resolve('resolved');
+            }, 25);
+        });
+}
+    const sleepf = async()=>{
+        let newT = "";
+        for(let x=0; x < text.length; x++){
+            newT = newT + text[x]
+            _textarea.innerText = newT;
+            const result = await resolveAwait();
+        }
+        document.getElementById("sugestao").style.display = "block";
+    }
+    sleepf();
+
+     
+    }
+  </script>
 {%endblock%}

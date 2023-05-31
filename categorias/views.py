@@ -86,6 +86,9 @@ def finalizar(request):
             'dataatual': datetime.now().strftime('%d/%m/%Y as '  "%H:%M:%S")
             }
             return render(request, 'finalizado.html', context)
+        else:
+            return redirect('/')
+
     else:
         return redirect('/')
 
