@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Categoria, Insumo, Carga, RegistrosDiario, Unidade, Viatura
+from .models import Categoria, Insumo, Carga, RegistrosDiario, Unidade, Viatura, Sugestao
 import time
 from django.urls import reverse
 from django.utils.html import format_html
@@ -63,6 +63,9 @@ class AdminRegisterDay(admin.ModelAdmin):
             return qs
         return qs.filter(unity=request.user.unity)
 
+class AdminSugestao(admin.ModelAdmin):
+    list_display = ('preenchente', 'sugestao')
+
 
 class AdminVtr(admin.ModelAdmin):
     list_display = ('name', 'placa', 'unidade')
@@ -81,3 +84,4 @@ admin.site.register(Insumo, AdminItem)
 admin.site.register(Carga, AdminChargeItem)
 admin.site.register(RegistrosDiario, AdminRegisterDay)
 admin.site.register(Viatura, AdminVtr)
+admin.site.register(Sugestao, AdminSugestao)

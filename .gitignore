@@ -1,9 +1,9 @@
-__pycache__/
+
 venv/
 venv
+__pycache__/
 **/__pycache__/
 categorias/__pycache__/
-
-__pycache__/
-
+migrations/
+__migrations__/
 find categorias -name "__pycache__" -type d -exec git rm -r --cached {} +

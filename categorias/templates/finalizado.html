@@ -36,14 +36,15 @@ CheckList Finalizado
 {% block conteudo%}
 <div class="container">
     <div class="headerbottom">
-
+    <div id="message" class="hide" style="background-color: green;color:white;border-radius: 6px;padding: 6px;"><label>Sugestão enviada com sucesso! Obrigado.</label></div>
     <h1>Checklist Finalizado!</h1>
     <label>{{ dataatual }}</label>
+    <label id="preenchente" style="display:none;">{{ preenchente }}</label>
     <label id="textarea"></label>
     <div id="sugestao" style="display: none;">
         <div style="display: flex;">
-            <textarea style="width: 100%;min-height: 30px;" placeholder="digite aqui para segerir..."></textarea>
-            <button>Enviar</button>
+            <textarea id="sugestText" name="sugestext" style="width: 100%;min-height: 30px;" placeholder="digite aqui para sugerir..." maxlength="190"></textarea>
+            <button onclick="enviarRequisicao();">Enviar</button>
         </div>
         <div>
             <a href="{% url 'index' %}"> <button class="btn">Voltar para o inicio</button></a>
@@ -76,7 +77,73 @@ CheckList Finalizado
     }
     sleepf();
 
-     
+    
     }
+    function enviarRequisicao() {
+        // Obtém o valor do campo de texto
+        var url_atual = window.location.href.replace("finalizar/", "sugestao")
+        let csrftoken = getCookie('csrftoken');
+
+        let inputValor = document.getElementById("sugestText");
+        if (!inputValor.value){return}
+        let preenchente = document.getElementById("preenchente").innerHTML
+        console.log(preenchente)
+
+        // Configura os dados para a requisição
+        let data = {
+            preenchente: preenchente,
+            sugestText: inputValor.value
+        };
+        console.log(JSON.stringify(data))
+        // Configura as opções para a requisição
+        let options = {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            }
+        };
+
+        // Envia a requisição
+        fetch(url_atual, options)
+            .then(response => {
+                // Lida com a resposta da requisição
+                if (response.ok) {
+                    console.log('Requisição POST enviada com sucesso!');
+                } else {
+                    console.error('Erro na requisição POST:', response.status);
+                }
+            })
+            .catch(error => {
+                console.error('Erro na requisição POST:', error);
+            })
+            .finally(()=>{
+                inputValor.value = "";
+                toggleDiv();
+            });
+    }
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            let cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    function toggleDiv() {
+        var div = document.getElementById("message");
+        if (div.classList.contains("hide")) {
+            div.classList.remove("hide");
+            div.classList.add("show");
+        }
+        }
+
   </script>
 {%endblock%}

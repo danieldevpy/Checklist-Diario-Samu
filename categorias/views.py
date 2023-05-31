@@ -1,8 +1,8 @@
 import json
 from django.http import FileResponse
-from .models import Categoria, Carga, RegistrosDiario, Viatura
-from django.shortcuts import render, redirect
-from datetime import datetime, date
+from .models import Categoria, Carga, RegistrosDiario, Viatura, Sugestao
+from django.shortcuts import render, redirect, HttpResponse
+from datetime import datetime
 from .pdf import crate_pdf_temporario
 import os
 
@@ -83,11 +83,16 @@ def finalizar(request):
             create_register.save()
 
             context = {
-            'dataatual': datetime.now().strftime('%d/%m/%Y as '  "%H:%M:%S")
+            'dataatual': datetime.now().strftime('%d/%m/%Y as '  "%H:%M:%S"),
+            'preenchente': nome_completo
             }
             return render(request, 'finalizado.html', context)
         else:
-            return redirect('/')
+            context = {
+            'dataatual': datetime.now().strftime('%d/%m/%Y as '  "%H:%M:%S"),
+            'preenchente': "Daniel"
+            }
+            return render(request, 'finalizado.html', context)
 
     else:
         return redirect('/')
@@ -149,3 +154,15 @@ def view_pdf(request, pk):
     os.remove(pdf)
     response = FileResponse(pdf_file)
     return response
+
+def sugestao(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            json_data = request.body.decode('utf-8')
+            # Decodifica o JSON para um objeto Python
+            data = json.loads(json_data)
+            preenchente = data.get('preenchente')
+            sugestext = data.get('sugestText')
+            Sugestao(preenchente=preenchente, sugestao=sugestext).save()
+
+            return HttpResponse(status=200)
