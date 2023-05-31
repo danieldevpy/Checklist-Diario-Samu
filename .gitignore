@@ -3,3 +3,7 @@ venv/
 venv
 **/__pycache__/
 categorias/__pycache__/
+
+__pycache__/
+
+find categorias -name "__pycache__" -type d -exec git rm -r --cached {} +

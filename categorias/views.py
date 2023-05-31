@@ -137,7 +137,6 @@ def registros_mensal(request):
 
 def view_pdf(request, pk):
     register = RegistrosDiario.objects.filter(id=int(pk)).first()
-    print(register)
     if not register:
         return False
     dados_preenchente = [f'Nome do Funcionário: {register.name}', f'Cargo: {register.cargo}', f'Unidade: {register.unity.name}', f'Viatura: {register.viatura.name}, Placa: {register.viatura.placa}, KM: {register.km}']
