@@ -104,7 +104,9 @@ class Main{
 
 
 async function exibirPDF(vtr, mes, fol) {
-    let url = `http://localhost:8000/generate_pdf_r_mensal/${vtr}/${mes}/${fol}`
+    let url_atual = window.location.href.split('/')
+    console.log(url_atual)
+    let url = `${url_atual[0]}//${url_atual[2]}/generate_pdf_r_mensal/${vtr}/${mes}/${fol}`
     const pdfContainer = document.getElementById('pdfContainer');
 
     const loading = document.getElementById("loader");

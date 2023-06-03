@@ -8,6 +8,9 @@ class PDFMensal(FPDF):
         line_height = self.font_size * 2.5
         self.image("./templates/static/img/logo.png", 10, 8, 33)
         self.ln(line_height)
+        self.set_font("Times", size=14)
+        self.cell(0, 10, f"Relatório mensal da viatura {self.ambu}", new_x="LMARGIN",)
+        self.ln(line_height)
     
     def footer(self):
         # Position cursor at 1.5 cm from bottom:
@@ -41,19 +44,17 @@ def create_pdf_mensal(dados_viatura, dates, items):
     name = f'pdf/{hr}.pdf'
     pdf = PDFMensal()
 
-    ambu = dados_viatura.name + "/" + dados_viatura.placa
-    line_height = pdf.font_size * 2.5
-
+    pdf.ambu = dados_viatura.name + "/" + dados_viatura.placa
     pdf.add_page()
 
     # Define a fonte e o tamanho do texto
-    pdf.set_font("Times", size=14)
+    pdf.set_font("Times", size=10)
     pdf.set_fill_color(255, 255, 255)
     pdf.set_draw_color(77, 77, 77)
-    pdf.cell(0, 10, f"Relatório mensal da viatura {ambu}", new_x="LMARGIN",)
-    pdf.ln(line_height)
-    
-    pdf.set_font("Times", size=10)
+
+
+    line_height = pdf.font_size * 2.5
+
     for ctg in items:
         pdf.set_fill_color(242, 242, 242)
         pdf.multi_cell(45, line_height, ctg, border=1,align="CENTER",
