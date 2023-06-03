@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    {% include 'parciais/_head.html' %}
+   <title>{% block title%} {%endblock%}</title>
+</head>
+<body>
+    
+    <header>
+        <div class="header">
+            {% block unidade %} {%endblock%}
+        </div>
+    </header>
+    <main>
+    
+        <div class="dashboard">
+            <div class="dash_menu">
+                <div class="vertical-menu">
+                    <a href="{% url 'dashboard' %}" class="active">Incio</a>
+                    <a href="{% url 'registro_mensal' 0 0%}">Registros Mensal</a>
+                  </div> 
+            </div>
+            <div class="dash_container">
+                {% block conteudo %} {%endblock%}
+            </div>
+            <div class="dash_right">
+                {% block right %} {%endblock%}
+            </div>
+ 
+        </div>
+   
+ 
+    </main>
+
+</body>
+</html>

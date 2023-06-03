@@ -45,7 +45,7 @@ class AdminChargeItem(admin.ModelAdmin):
 
 class AdminRegisterDay(admin.ModelAdmin):
     fields = ['name', 'cargo', 'unity', 'acesso', 'viatura', 'km', 'pdf_link', 'pub_date']
-    list_display = ('name', 'unity', 'viatura', 'km', 'pdf_link', 'pub_date')
+    list_display = ('name', 'unity', 'viatura', 'km', 'pdf_link', 'acesso', 'pub_date')
     search_fields = ('name', 'viatura__name', 'unity__name')
 
     readonly_fields = ['pdf_link']

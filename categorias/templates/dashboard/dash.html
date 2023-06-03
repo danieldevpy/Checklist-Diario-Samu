@@ -1,0 +1,44 @@
+{% extends 'base_dash.html' %}
+{% load static %}
+{% block title %}
+CheckList Registro Mensal
+{%endblock%}
+{% block unidade %}
+
+    <div class="headerleft">
+        <a href="{% url 'index' %}">
+            <img src="{% static 'img/samulogo.png' %}">
+            </a>
+            <a href="{% url 'index' %}">
+            <h2> Checklist Diário </h2>
+            </a>
+    </div>
+
+    <div class="headeright">
+        {% if user.usa and not user.is_staff%}
+        <label>Logado na unidade de <b>{{user.unity}} (USA)</b></label>
+        {% elif user.usb and not user.is_staff%}
+        <label>Logado na unidade de <b>{{user.unity}} (USB)</b></label>
+        {% else %}
+        <label>Logado na unidade de <b>{{user.unity}}</b></label>
+        {% endif %}
+        <br>
+        <label><a href="/">Inicio</a></label>
+        {% if user.is_staff %}
+        <label><a href="/admin" target="_blank">Acesso Administrativo</a></label>
+        {% endif %}
+        <label><a href="{% url 'logout' %}">Sair</a></label>
+    </div>
+
+       
+{%endblock%}
+
+{% block conteudo%}
+<div class="container" style="flex-direction: column;justify-content:center;align-items:center;padding:10px;">
+    <label>O dashboard do checklist diário está em construção.</label>
+    <label>Será inserido novas ferramentas de analises!</label>
+    <label>Consulte a aba registro mensal para verificar a nova atualização.</label>
+</div>
+
+
+{%endblock%}

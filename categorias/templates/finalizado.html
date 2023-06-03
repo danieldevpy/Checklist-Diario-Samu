@@ -24,7 +24,7 @@ CheckList Finalizado
         {% endif %}
         <br>
         {% if user.is_staff %}
-        <label><a href="/registros">Registros Mensal</a></label>
+        <label><a href="/dashboard">DashBoard</a></label>
         <label><a href="/admin" target="_blank">Acesso Administrativo</a></label>
         {% endif %}
         <label><a href="{% url 'logout' %}">Sair</a></label>
@@ -38,6 +38,7 @@ CheckList Finalizado
     <div class="headerbottom">
     <div id="message" class="hide" style="background-color: green;color:white;border-radius: 6px;padding: 6px;"><label>Sugestão enviada com sucesso! Obrigado.</label></div>
     <h1>Checklist Finalizado!</h1>
+    <img style="width:150px;" src="{% static 'img/check.png' %}">
     <label>{{ dataatual }}</label>
     <label id="preenchente" style="display:none;">{{ preenchente }}</label>
     <label id="textarea"></label>
@@ -56,14 +57,14 @@ CheckList Finalizado
 </div>
 <script>
     window.onload = function() { 
-    let text = "Parabéns, o checklist foi finalizado corretamente!\n\ Para ajudar a melhorar o sistema você pode sugerir alguma melhoria?";
+    let text = "Obrigado, o checklist foi finalizado corretamente!\n\ Para contribuir com o sistema, você avaliar?";
     let _textarea = document.getElementById("textarea");
 
     const resolveAwait = ()=> {
         return new Promise(resolve => {
             setTimeout(() => {
             resolve('resolved');
-            }, 25);
+            }, 5);
         });
 }
     const sleepf = async()=>{

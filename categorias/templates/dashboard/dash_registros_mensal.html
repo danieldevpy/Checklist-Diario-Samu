@@ -1,0 +1,101 @@
+{% extends 'base_dash.html' %}
+{% load static %}
+{% block title %}
+CheckList Registro Mensal
+{%endblock%}
+{% block unidade %}
+
+    <div class="headerleft">
+        <a href="{% url 'index' %}">
+            <img src="{% static 'img/samulogo.png' %}">
+            </a>
+            <a href="{% url 'index' %}">
+            <h2> Checklist Diário </h2>
+            </a>
+    </div>
+
+    <div class="headeright">
+        {% if user.usa and not user.is_staff%}
+        <label>Logado na unidade de <b>{{user.unity}} (USA)</b></label>
+        {% elif user.usb and not user.is_staff%}
+        <label>Logado na unidade de <b>{{user.unity}} (USB)</b></label>
+        {% else %}
+        <label>Logado na unidade de <b>{{user.unity}}</b></label>
+        {% endif %}
+        <br>
+        <label><a href="/">Inicio</a></label>
+        {% if user.is_staff %}
+        <label><a href="/admin" target="_blank">Acesso Administrativo</a></label>
+        {% endif %}
+        <label><a href="{% url 'logout' %}">Sair</a></label>
+    </div>
+
+       
+{%endblock%}
+
+{% block conteudo%}
+
+        <div class="dash_meses">
+            {% for i, m in meses %}
+            <a id="mes{{i}}" href="{% url 'registro_mensal' vtr i %}">
+                {% if i == mes %}
+                    <label style="text-decoration: underline;">{{m}}</label>
+                {% else %}
+                    <label>{{m}}</label>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+
+        <div id="copy_vtrs"></div>
+
+        {% if index %}
+        <h3 style="text-align:center;padding-top:16px;">Selecione uma data e uma viatua!</h3>
+        {% else %}
+
+        <div id="controller_pdf" style="align-self:right;">
+            <button class="dash_btn" onclick="exibirPDF({{vtr}}, {{mes}}, 0);"><</button>
+            <label style="color:grey;">folhas<label>
+            <button class="dash_btn" onclick="exibirPDF({{vtr}}, {{mes}}, 1);">></button>
+        </div>
+        <div id="message" style="background-color: #ff8082;color:white;border-radius: 6px;padding: 6px;display:none;"><label></label></div>
+        <div id="loader" class="loader" style="display:none;">
+            <div class="loader-wheel"></div>
+        </div>
+        <div id="pdfContainer"></div>
+    
+        <script>
+            window.onload = function() {
+                
+                exibirPDF({{vtr}}, {{mes}}, 0);
+            }
+        </script>
+        {% endif %}
+
+
+{%endblock%}
+
+
+{% block right%}
+
+
+        <div style="display:flex;flex-direction:column;gap:10px;padding:10px;">
+        <label style="color:#ad3335;align-self:center;">Viaturas</label>
+        {% for viatura in viaturas %}
+             <a style="flex-grow: 1;" href="{% url 'registro_mensal' viatura.pk mes %}">
+                {% if vtr == viatura.pk %}
+                    <div class="dash_item" style="background-color:#ffc5c6;">
+                {%else%}
+                    <div class="dash_item">
+                {%endif%}
+                    <img style="width:50px;" src="{% static 'img/icon-samu.png' %}">
+                    <div style="display:flex;flex-direction:column;">
+                    <label style="word-break: break-word;">{{viatura.name}}</label>
+                    <label style="word-break: break-word;color:#713131;">{{viatura.placa}}</label>
+                    </div>
+                </div>
+                </a>
+        {% endfor %}
+        </div>
+
+{%endblock%}

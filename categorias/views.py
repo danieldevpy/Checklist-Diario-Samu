@@ -3,8 +3,10 @@ from django.http import FileResponse
 from .models import Categoria, Carga, RegistrosDiario, Viatura, Sugestao
 from django.shortcuts import render, redirect, HttpResponse
 from datetime import datetime
-from .pdf import crate_pdf_temporario
+from django.db.models import Q
+from .pdf import crate_pdf_temporario, create_pdf_mensal
 import os
+import calendar
 
 
 def index(request):
@@ -88,56 +90,14 @@ def finalizar(request):
             }
             return render(request, 'finalizado.html', context)
         else:
-            return redirect('/')
+            context = {
+            'dataatual': datetime.now().strftime('%d/%m/%Y as '  "%H:%M:%S"),
+            'preenchente': "daniel"
+            }
+            return render(request, 'finalizado.html', context)
 
     else:
         return redirect('/')
-
-def registros_mensal(request):
-        # if request.user.is_authenticated:
-        #     user = request.user 
-        #     viaturas = Viatura.objects.filter(unidade=user.unity, ativo=True)
-        #     context = {
-        #     'items': False,    
-        #     'viaturas': viaturas
-        #     }
-        #     if request.method == 'POST':
-        #         day = 31
-        #         _mes = int(request.POST.get('mes'))
-        #         _ano = int(request.POST.get('ano'))
-        #         _copy_mes = None
-        #         _copy_ano = _ano
-
-        #         if _mes == 4 or _mes == 6 or _mes == 9 or _mes == 11:
-        #             day = 30
-        #         elif _mes == 2:
-        #             day = 28
-
-        #         if _mes == 12:
-        #             _copy_mes = 1
-        #             _copy_ano += 1
-        #         else:
-        #             _copy_mes = _mes + 1
-            
-        #         _viatura = request.POST.get('select_viaturas')
-        #         objects = RegistroItemDiario.objects.filter(vtr=_viatura, date__range=(date(_ano, _mes, 1), date(_copy_ano, _copy_mes, 1))).all()
-        #         vtr = Viatura.objects.filter(unidade=user.unity, id=_viatura).first()
-        #         registro_vtr = RegistrosDiario.objects.filter(viatura__id=_viatura, pub_date__range=(date(_ano, _mes, 1), date(_copy_ano, _copy_mes, 1)))
-        #         context['infosday'] =  zip([str(f'1/{_mes}/{_ano} a 1/{_copy_mes}/{_copy_ano}')], [vtr])
-        #         if objects:
-        #             for obj1 in objects:
-        #                 obj1.date = int(str(obj1.date)[8:10])
-        #             for obj2 in registro_vtr:
-        #                 obj2.pub_date = int(str(obj2.pub_date)[8:10])
-        #             context['objects'] = objects
-        #             context['vtrs'] = registro_vtr
-        #             context['days'] = day
-        #         return render(request, 'registros.html', context)
-        #     else:
-        #         return render(request, 'registros.html', context)
-        # else:
-    return redirect('/')
-
 
 def view_pdf(request, pk):
     register = RegistrosDiario.objects.filter(id=int(pk)).first()
@@ -162,3 +122,59 @@ def sugestao(request):
             Sugestao(preenchente=preenchente, sugestao=sugestext).save()
 
             return HttpResponse(status=200)
+        
+def dashboard(request):
+    return render(request, 'dashboard/dash.html',)
+
+def dashboard_registros(request, pk, date):
+    user = request.user
+    meses = zip(range(1, 13), ["Janeiro", "Fevereiro", "Março", "Abril",  "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outrubro", "Novembro", "Dezembro"])
+    viaturas = Viatura.objects.filter(unidade=user.unity, ativo=True).all()
+    context = {"index": False, "viaturas": viaturas, "meses":meses, "mes": date, "vtr": pk}
+    if pk == 0 or date == 0:
+        context['index'] = True
+    return render(request, 'dashboard/dash_registros_mensal.html', context)
+
+
+def generate_pdf_r_mensal(request, pk, date, part):
+    inicio = 1
+    ultimo_dia = 15+1
+    if part == 1:
+        inicio = 16
+        _, ultimo_dia = calendar.monthrange(2023, date)
+
+    viatura = Viatura.objects.filter(id=pk).first()
+    data_inicial = datetime(2023, date, inicio)
+    data_final = datetime(2023, date, ultimo_dia)
+    consulta = Q(pub_date__gte=data_inicial, pub_date__lte=data_final, viatura=viatura)
+    
+    items = {}
+    registers = RegistrosDiario.objects.filter(consulta).order_by("pub_date")
+    if not registers:
+        return HttpResponse(status=404)
+    
+    for register in registers:
+        all_item = json.loads(register.items)
+        for item in all_item:
+            day = int(register.pub_date.strftime("%d"))
+
+            ctg = item['category']
+            name = item['name']
+            value = item['value']
+    
+            if not ctg in items:
+                items[ctg] = {}
+
+            if not name in items[ctg]:
+                items[ctg][name] = {}
+
+            items[ctg][name][day] = value
+
+    archive = create_pdf_mensal(viatura, {"init": inicio, "fim": ultimo_dia}, items)
+  
+    with open(archive, 'rb') as f:
+            response = HttpResponse(f.read(), content_type='application/pdf')
+            response['Content-Disposition'] = 'inline; filename="relatorio-mensal.pdf"'
+    
+    os.remove(archive)
+    return response
