@@ -79,8 +79,12 @@ def create_pdf_mensal(dados_viatura, dates, items):
                 except:
                     item = " "
                     
-                pdf.multi_cell(10, line_height, str(item), border=1, align="CENTER",
-                    new_x="RIGHT", new_y="TOP", max_line_height=pdf.font_size, fill=True)
+                try:
+                    pdf.multi_cell(10, line_height, str(item), border=1, align="CENTER",
+                        new_x="RIGHT", new_y="TOP", max_line_height=pdf.font_size, fill=True)
+                except:
+                    pdf.multi_cell(10, line_height, "error", border=1, align="CENTER",
+                        new_x="RIGHT", new_y="TOP", max_line_height=pdf.font_size, fill=True)
             pdf.ln(line_height)
 
         pdf.ln(line_height)

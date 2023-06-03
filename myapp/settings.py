@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': 'checklist',
         'USER': 'root',
         'PASSWORD': '123456',
-        'HOST': '192.168.1.232',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }

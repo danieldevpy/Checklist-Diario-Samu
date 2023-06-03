@@ -171,7 +171,6 @@ def generate_pdf_r_mensal(request, pk, date, part):
             items[ctg][name][day] = value
 
     archive = create_pdf_mensal(viatura, {"init": inicio, "fim": ultimo_dia}, items)
-  
     with open(archive, 'rb') as f:
             response = HttpResponse(f.read(), content_type='application/pdf')
             response['Content-Disposition'] = 'inline; filename="relatorio-mensal.pdf"'
