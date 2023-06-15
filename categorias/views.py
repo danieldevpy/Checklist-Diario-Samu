@@ -1,6 +1,6 @@
 import json
 from django.http import FileResponse
-from .models import Categoria, Carga, RegistrosDiario, Viatura, Sugestao
+from .models import Categoria, Carga, RegistrosDiario, Viatura
 from django.shortcuts import render, redirect, HttpResponse
 from datetime import datetime
 from django.db.models import Q
@@ -119,7 +119,7 @@ def sugestao(request):
             data = json.loads(json_data)
             preenchente = data.get('preenchente')
             sugestext = data.get('sugestText')
-            Sugestao(preenchente=preenchente, sugestao=sugestext).save()
+            # Sugestao(preenchente=preenchente, sugestao=sugestext).save()
 
             return HttpResponse(status=200)
         

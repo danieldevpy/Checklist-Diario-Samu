@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Categoria, Insumo, Carga, RegistrosDiario, Unidade, Viatura, Sugestao
+from .models import Categoria, Insumo, Carga, RegistrosDiario, Unidade, Viatura
 import time
 from django.urls import reverse
 from django.utils.html import format_html
@@ -84,4 +84,4 @@ admin.site.register(Insumo, AdminItem)
 admin.site.register(Carga, AdminChargeItem)
 admin.site.register(RegistrosDiario, AdminRegisterDay)
 admin.site.register(Viatura, AdminVtr)
-admin.site.register(Sugestao, AdminSugestao)
+# admin.site.register(Sugestao, AdminSugestao)

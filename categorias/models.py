@@ -97,10 +97,12 @@ class RegistrosDiario(models.Model):
     def __str__(self):
         return f'{self.name}'
     
-class Sugestao(models.Model):
-    preenchente = models.CharField(max_length=200)
-    sugestao = models.CharField(max_length=200)
-    pub_date = models.DateTimeField(default=datetime.now, null=True, verbose_name="Data")
+# class Sugestao(models.Model):
+#     preenchente = models.CharField(max_length=200)
+#     sugestao = models.CharField(max_length=200)
+#     pub_date = models.DateTimeField(default=datetime.now, null=True, verbose_name="Data")
 
-    def __str__(self) -> str:
-        return self.preenchente
+#     def __str__(self) -> str:
+#         return self.preenchente
+class Avaliacao(models.Model):
+    time_execute_site = models.IntegerField()

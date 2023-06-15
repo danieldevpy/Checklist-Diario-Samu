@@ -42,15 +42,16 @@ CheckList Finalizado
     <label>{{ dataatual }}</label>
     <label id="preenchente" style="display:none;">{{ preenchente }}</label>
     <label id="textarea"></label>
+       <a href="{% url 'index' %}"> <button class="btn">Voltar para o inicio</button></a>
     <div id="sugestao" style="display: none;">
         <div style="display: flex;">
             <textarea id="sugestText" name="sugestext" style="width: 100%;min-height: 30px;" placeholder="digite aqui para sugerir..." maxlength="190"></textarea>
             <button onclick="enviarRequisicao();">Enviar</button>
         </div>
         <div>
-            <a href="{% url 'index' %}"> <button class="btn">Voltar para o inicio</button></a>
+          
         </div>
-
+ 
     </div>
 
     </div>
@@ -76,7 +77,7 @@ CheckList Finalizado
         }
         document.getElementById("sugestao").style.display = "block";
     }
-    sleepf();
+    // sleepf();
 
     
     }
