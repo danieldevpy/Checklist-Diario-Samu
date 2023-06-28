@@ -19,9 +19,9 @@ class TestCaseSelenium(unittest.TestCase):
         def test_complete(self):
             self.driver.get("http://checklist.cisbaf.org.br")
             name = self.driver.find_element(By.NAME, "unity")
-            name.send_keys("novaiguacu_usa")
+            name.send_keys("admin")
             passw = self.driver.find_element(By.NAME, "password")
-            passw.send_keys("novaiguacu@01")
+            passw.send_keys("admingeral")
             btn = self.driver.find_element(By.XPATH, '/html/body/main/div/form/div/input[3]')
             btn.click()
 
