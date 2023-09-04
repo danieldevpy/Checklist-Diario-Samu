@@ -57,11 +57,11 @@ def create_pdf_mensal(dados_viatura, dates, items):
 
     for ctg in items:
         pdf.set_fill_color(242, 242, 242)
-        pdf.multi_cell(45, line_height, ctg, border=1,align="CENTER",
+        pdf.multi_cell(34, line_height, ctg, border=1,align="CENTER",
             new_x="RIGHT", new_y="TOP", max_line_height=pdf.font_size, fill=True)
 
         for x in range(int(dates['init']), int(dates['fim'])):
-            pdf.multi_cell(10, line_height, str(x), border=1, align="CENTER",
+            pdf.multi_cell(11, line_height, str(x), border=1, align="CENTER",
                 new_x="RIGHT", new_y="TOP", max_line_height=pdf.font_size, fill=True)
         pdf.ln(line_height)
         pdf.set_fill_color(255, 255, 255)
@@ -70,20 +70,20 @@ def create_pdf_mensal(dados_viatura, dates, items):
             if len(insumo) > 30:
                 insumo = insumo[0:30]+"..."
 
-            pdf.multi_cell(45, line_height, insumo.lower().capitalize(), border=1,align="CENTER",
+            pdf.multi_cell(34, line_height, insumo.lower().capitalize(), border=1,align="CENTER",
                 new_x="RIGHT", new_y="TOP", max_line_height=pdf.font_size, fill=True)
         
             for x in range(int(dates['init']), int(dates['fim'])):
                 try:
                     item = items[ctg][copy][x]
                 except:
-                    item = " "
+                    item = ""
                     
                 try:
-                    pdf.multi_cell(10, line_height, str(item), border=1, align="CENTER",
+                    pdf.multi_cell(11, line_height, str(item), border=1, align="CENTER",
                         new_x="RIGHT", new_y="TOP", max_line_height=pdf.font_size, fill=True)
                 except:
-                    pdf.multi_cell(10, line_height, "error", border=1, align="CENTER",
+                    pdf.multi_cell(11, line_height, "error", border=1, align="CENTER",
                         new_x="RIGHT", new_y="TOP", max_line_height=pdf.font_size, fill=True)
             pdf.ln(line_height)
 

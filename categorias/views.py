@@ -152,8 +152,15 @@ def generate_pdf_r_mensal(request, pk, date, part):
     registers = RegistrosDiario.objects.filter(consulta).order_by("pub_date")
     if not registers:
         return HttpResponse(status=404)
+
+
     
     for register in registers:
+        if not 'Km Preenchidos' in items:
+            items['Km Preenchidos'] = {}
+            items['Km Preenchidos'][viatura.name] = {}
+        
+        items['Km Preenchidos'][viatura.name][int(register.pub_date.strftime("%d"))] = register.km
         all_item = json.loads(register.items)
         for item in all_item:
             day = int(register.pub_date.strftime("%d"))
@@ -169,6 +176,7 @@ def generate_pdf_r_mensal(request, pk, date, part):
                 items[ctg][name] = {}
 
             items[ctg][name][day] = value
+
 
     archive = create_pdf_mensal(viatura, {"init": inicio, "fim": ultimo_dia}, items)
     with open(archive, 'rb') as f:
