@@ -7,3 +7,4 @@ categorias/__pycache__/
 migrations/
 __migrations__/
 find categorias -name "__pycache__" -type d -exec git rm -r --cached {} +
+.venv/
