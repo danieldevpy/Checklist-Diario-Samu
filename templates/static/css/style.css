@@ -133,6 +133,7 @@ th, td{
 .closed {
     min-width: 300px;
     min-height: 150px;
+    max-width: 300px;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -154,6 +155,10 @@ th, td{
     font-family: 'Poppins';
     font-size: 14px;
 
+}
+.top{
+
+    text-align: center;
 }
 .display_closed{
 

@@ -43,7 +43,7 @@ CheckList Diário Samu
                 {% for categoria in categorias %}
                 <div id="pacote" class="pacote closed" onclick="main.clicked(this);">
                     <div class="top"> <p>{{ categoria.name }} </p></div>
-                    <div id="{{categoria.name}}" class="display_closed" >
+                    <div id="ctg{{categoria.id}}" class="display_closed" >
                         <table>
                             <tr>
                                 <th>Nome</th>
