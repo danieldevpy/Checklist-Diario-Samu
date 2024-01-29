@@ -103,10 +103,10 @@ class Main{
 }
 
 
-async function exibirPDF(vtr, mes, fol) {
+async function exibirPDF(vtr, mes, fol, ano) {
     let url_atual = window.location.href.split('/')
     console.log(url_atual)
-    let url = `${url_atual[0]}//${url_atual[2]}/generate_pdf_r_mensal/${vtr}/${mes}/${fol}`
+    let url = `${url_atual[0]}//${url_atual[2]}/generate_pdf_r_mensal/${vtr}/${mes}/${fol}/${ano}`
     const pdfContainer = document.getElementById('pdfContainer');
 
     const loading = document.getElementById("loader");

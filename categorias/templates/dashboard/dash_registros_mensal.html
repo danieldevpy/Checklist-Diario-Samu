@@ -37,7 +37,7 @@ CheckList Registro Mensal
 
         <div class="dash_meses">
             {% for i, m in meses %}
-            <a id="mes{{i}}" href="{% url 'registro_mensal' vtr i %}">
+            <a id="mes{{i}}" href="{% url 'registro_mensal' vtr i selectAno %}">
                 {% if i == mes %}
                     <label style="text-decoration: underline;">{{m}}</label>
                 {% else %}
@@ -52,11 +52,18 @@ CheckList Registro Mensal
         {% if index %}
         <h3 style="text-align:center;padding-top:16px;">Selecione uma data e uma viatua!</h3>
         {% else %}
-
         <div id="controller_pdf" style="align-self:right;">
-            <button class="dash_btn" onclick="exibirPDF({{vtr}}, {{mes}}, 0);"><</button>
+            <div style="display: flex; justify-content: center; align-items: center;gap: 5px;">
+                {% for ano in anos %}
+                    <a style="flex-grow: 1;" href="{% url 'registro_mensal' vtr mes ano %}">
+                        {{ano}}
+                    </a>
+                {% endfor %}
+            </div>
+    
+            <button class="dash_btn" onclick="exibirPDF({{vtr}}, {{mes}}, 0, {{selectAno}});"><</button>
             <label style="color:grey;">folhas<label>
-            <button class="dash_btn" onclick="exibirPDF({{vtr}}, {{mes}}, 1);">></button>
+            <button class="dash_btn" onclick="exibirPDF({{vtr}}, {{mes}}, 1, {{selectAno}});">></button>
         </div>
         <div id="message" style="background-color: #ff8082;color:white;border-radius: 6px;padding: 6px;display:none;"><label></label></div>
         <div id="loader" class="loader" style="display:none;">
@@ -67,7 +74,7 @@ CheckList Registro Mensal
         <script>
             window.onload = function() {
                 
-                exibirPDF({{vtr}}, {{mes}}, 0);
+                exibirPDF({{vtr}}, {{mes}}, 0, {{selectAno}});
             }
         </script>
         {% endif %}
@@ -78,11 +85,10 @@ CheckList Registro Mensal
 
 {% block right%}
 
-
         <div style="display:flex;flex-direction:column;gap:10px;padding:10px;">
         <label style="color:#ad3335;align-self:center;">Viaturas</label>
         {% for viatura in viaturas %}
-             <a style="flex-grow: 1;" href="{% url 'registro_mensal' viatura.pk mes %}">
+             <a style="flex-grow: 1;" href="{% url 'registro_mensal' viatura.pk mes selectAno %}">
                 {% if vtr == viatura.pk %}
                     <div class="dash_item" style="background-color:#ffc5c6;">
                 {%else%}

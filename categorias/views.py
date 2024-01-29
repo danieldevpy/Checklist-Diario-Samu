@@ -8,7 +8,6 @@ from .pdf import crate_pdf_temporario, create_pdf_mensal
 import os
 import calendar
 
-
 def index(request):
     if request.user.is_authenticated:
         user = request.user 
@@ -126,26 +125,31 @@ def sugestao(request):
 def dashboard(request):
     return render(request, 'dashboard/dash.html',)
 
-def dashboard_registros(request, pk, date):
+def dashboard_registros(request, pk, date, ano):
+    print("x ano teste", ano)
+    if ano == 0:
+        ano = datetime.now().year
     user = request.user
+    anos = [2023, 2024]
     meses = zip(range(1, 13), ["Janeiro", "Fevereiro", "Março", "Abril",  "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outrubro", "Novembro", "Dezembro"])
     viaturas = Viatura.objects.filter(unidade=user.unity, ativo=True).all()
-    context = {"index": False, "viaturas": viaturas, "meses":meses, "mes": date, "vtr": pk}
+    context = {"index": False, "viaturas": viaturas, "meses":meses, "mes": date, "vtr": pk, "anos": anos, "selectAno": ano}
     if pk == 0 or date == 0:
         context['index'] = True
     return render(request, 'dashboard/dash_registros_mensal.html', context)
 
 
-def generate_pdf_r_mensal(request, pk, date, part):
+def generate_pdf_r_mensal(request, pk, date, part, ano):
+    print(f'o ano foi {ano}')
     inicio = 1
     ultimo_dia = 15+1
     if part == 1:
         inicio = 16
-        _, ultimo_dia = calendar.monthrange(2023, date)
+        _, ultimo_dia = calendar.monthrange(ano, date)
 
     viatura = Viatura.objects.filter(id=pk).first()
-    data_inicial = datetime(2023, date, inicio)
-    data_final = datetime(2023, date, ultimo_dia)
+    data_inicial = datetime(ano, date, inicio)
+    data_final = datetime(ano, date, ultimo_dia)
     consulta = Q(pub_date__gte=data_inicial, pub_date__lte=data_final, viatura=viatura)
     
     items = {}
@@ -153,8 +157,6 @@ def generate_pdf_r_mensal(request, pk, date, part):
     if not registers:
         return HttpResponse(status=404)
 
-
-    
     for register in registers:
         if not 'Km Preenchidos' in items:
             items['Km Preenchidos'] = {}
