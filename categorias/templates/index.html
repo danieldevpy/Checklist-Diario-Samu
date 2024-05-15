@@ -43,7 +43,7 @@ CheckList Diário Samu
                 {% for categoria in categorias %}
                 <div id="pacote" class="pacote closed" onclick="main.clicked(this);">
                     <div class="top"> <p>{{ categoria.name }} </p></div>
-                    <div id="ctg{{categoria.id}}" class="display_closed" >
+                    <div id="ctg{{categoria.id}}" name="{{categoria.name}}" class="display_closed" >
                         <table>
                             <tr>
                                 <th>Nome</th>
@@ -66,7 +66,7 @@ CheckList Diário Samu
                 {% endfor %}
                 <div id="pacote" class="pacote closed" name="pacote_fim" onclick="main.clicked(this);" >
                     <div class="top"> <p>Finalizar<br>Checklist</p></div>
-                    <div id="finalizar" class="display_closed" >
+                    <div id="finalizar" name="Finalizar Checklist" class="display_closed" >
                         <table>
                                 <tr>
                                     <td>Nome Completo</td>

@@ -15,6 +15,8 @@ class Main{
     pct.forEach(function(thisdiv) {
         var childrens = thisdiv.children[1];
         let namediv = childrens.id
+        var nameAttribute = childrens.getAttribute("name");
+        console.log(nameAttribute)
         var inputs = document.querySelectorAll(`#${namediv} input`);
         let save = '';
 
@@ -25,7 +27,7 @@ class Main{
                     
                 }else{
                 save = namediv
-                alert(`A categoria ${namediv} não foi totalmente preenchida!`)
+                alert(`A categoria ${nameAttribute} não foi totalmente preenchida!`)
                 }
             }
         });
